@@ -113,7 +113,7 @@ Templates define what's in your development environment. Let's start simple:
 
 4. **Name your template:**
    - Name: `quickstart`
-   - Display name: `quickstaet doc template`
+   - Display name: `quickstart doc template`
    - Description: `Provision Docker containers as Coder workspaces`
   
 ![Create template](../images/screenshots/create-template.png)
