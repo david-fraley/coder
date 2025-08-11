@@ -1,232 +1,271 @@
 # Quickstart
 
-Follow the steps in this guide to install Coder locally or on a cloud-hosting
-provider, set up a workspace, and connect to it from VS Code.
+**Keywords:** quickstart, first workspace, templates, workspaces, users
 
-By the end of this guide, you'll have a remote development environment that you
-can connect to from any device anywhere, so you can work on the same files in a
-persistent environment from your main device, a tablet, or your phone.
+Get your first Coder development environment running in under 10 minutes. This guide covers the essential concepts and walks you through creating your first workspace and running VS Code from it.
 
-## Install and start Coder
+## What You'll Build
 
-<div class="tabs">
+In this quickstart, you'll:
+- ✅ Install Coder server
+- ✅ Create a **template** (blueprint for dev environments)
+- ✅ Launch a **workspace** (your actual dev environment)
+- ✅ Connect from your favorite IDE
 
-## Linux/macOS
+## Understanding Coder: 30-Second Overview
 
-1. Install Docker:
+Before diving in, here are the three concepts that power Coder:
 
-   ```bash
-   curl -sSL https://get.docker.com | sh
-   ```
+| Component | What It Is | Real-World Analogy |
+|-----------|------------|-------------------|
+| **Templates** | A Terraform blueprint that defines your dev environment (OS, tools, resources) | Recipe for a meal |
+| **Workspaces** | The actual running environment created from the template | The cooked meal |
+| **Users** | A developer who launches the workspace from a template and does their work inside it | The people eating |
 
-   For more details, visit:
+```mermaid
+graph LR
+    A[Admin creates Template] --> B[Developer launches Workspace]
+    B --> C[Developer codes in IDE]
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style C fill:#e8f5e9
+```
 
-   - [Linux instructions](https://docs.docker.com/desktop/install/linux-install/)
-   - [Mac instructions](https://docs.docker.com/desktop/install/mac-install/)
+**First time here?** Coder separates how an environment is defined (Admin’s job) from where you do your day-to-day coding (Developer’s job). As a developer, you’ll use templates to launch workspaces, and as an admin, you’ll create and manage those templates for others.
 
-1. Assign your user to the Docker group:
+## Prerequisites
 
-   ```shell
-   sudo usermod -aG docker $USER
-   ```
+- A machine with 2+ CPU cores and 4GB+ RAM
+- Docker installed ([Install Docker](https://docs.docker.com/get-docker/))
+- 10 minutes of your time
 
-1. Run `newgrp` to activate the groups changes:
+## Step 1: Install Coder (2 minutes)
 
-   ```shell
-   newgrp docker
-   ```
+Choose your platform:
 
-   You might need to log out and back in or restart the machine for changes to
-   take effect.
+<details>
+<summary><b>macOS/Linux</b></summary>
 
-1. Install Coder:
+```bash
+# Install the Coder CLI
+curl -L https://coder.com/install.sh | sh
 
-   ```shell
-   curl -L https://coder.com/install.sh | sh
-   ```
+# Verify installation
+coder version
+```
 
-   - For standalone binaries, system packages, or other alternate installation
-     methods, refer to the
-     [latest release on GitHub](https://github.com/coder/coder/releases/latest).
+</details>
 
-1. Start Coder:
+<details>
+<summary><b>Windows</b></summary>
 
-   ```shell
-   coder server
-   ```
+```powershell
+# Using winget
+winget install Coder.Coder
 
-## Windows
+# Or download from
+# https://github.com/coder/coder/releases
+```
 
-If you plan to use the built-in PostgreSQL database, ensure that the
-[Visual C++ Runtime](https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist#latest-microsoft-visual-c-redistributable-version)
-is installed.
+</details>
 
-1. [Install Docker](https://docs.docker.com/desktop/install/windows-install/).
+## Step 2: Start Coder Server (1 minute)
 
-1. Use the
-   [`winget`](https://learn.microsoft.com/en-us/windows/package-manager/winget/#use-winget)
-   package manager to install Coder:
+```bash
+# Start Coder (runs on http://localhost:3000)
+coder server
 
-   ```powershell
-   winget install Coder.Coder
-   ```
+# Your terminal shows:
+# ✓ Started HTTP listener at http://localhost:3000
+# ✓ View the Web UI: http://localhost:3000
+```
 
-1. Start Coder:
+> **Tip:** Coder automatically opens your browser. If not, go to [http://localhost:3000](http://localhost:3000)
 
-   ```shell
-   coder server
-   ```
+## Step 3: Initial Setup (2 minutes)
 
-</div>
+1. **Create your admin account:**
+   - Username: `yourname` (lowercase, no spaces)
+   - Email: `your.email@example.com`
+   - Password: Choose a strong password
+  
+	You can also choose to **Continue with GitHub** instead of creating an admin account
 
-## Configure Coder with a new Workspace
+   ![Welcome to Coder - Create admin user](../images/screenshots/welcome-create-admin-user.png)
 
-1. Coder will attempt to open the setup page in your browser. If it doesn't open
-   automatically, go to <http://localhost:3000>.
+3. **You'll land on the Workspaces page** (it's empty - that's normal!)
 
-   - If you get a browser warning similar to `Secure Site Not Available`, you
-     can ignore the warning and continue to the setup page.
+## Step 4: Create Your First Template (2 minutes)
 
-   If your Coder server is on a network or cloud device, or you are having
-   trouble viewing the page, locate the web UI URL in Coder logs in your
-   terminal. It looks like `https://<CUSTOM-STRING>.<TUNNEL>.try.coder.app`.
-   It's one of the first lines of output, so you might have to scroll up to find
-   it.
+Templates define what's in your development environment. Let's start simple:
 
-1. On the **Welcome to Coder** page, to use your GitHub account to log in,
-   select **Continue with GitHub**.
-   You can also enter an email and password to create a new admin account on
-   the Coder deployment:
+1. Click **"Templates"** → **"Create Template"**
 
-   ![Welcome to Coder - Create admin user](../images/screenshots/welcome-create-admin-user.png)_Welcome
-   to Coder - Create admin user_
+2. **Choose a starter template:**
+   
+   | Starter | Best For | Includes |
+   |---------|----------|----------|
+   | **Docker** (Recommended) | Local development | Ubuntu, common tools |
+   | **Kubernetes** | Cloud-native teams | K8s pod deployment |
+   | **AWS EC2** | Cloud resources | EC2 instance |
 
-1. On the **Workspaces** page, select **Go to templates** to create a new
-   template.
+3. Click **"Use template"** on **Docker**
 
-1. For this guide, use a Docker container. Locate **Docker Containers** and
-   select **Use template**.
+4. **Name your template:**
+   - Name: `quickstart`
+   - Display name: `quickstaet doc template`
+   - Description: `Provision Docker containers as Coder workspaces`
+  
+![Create template](../images/screenshots/create-template.png)
 
-1. Give the template a **Name** that you'll recognize both in the Coder UI and
-   in command-line calls.
+5. Click **"Create template"**
 
-   The rest of the template details are optional, but will be helpful when you
-   have more templates.
+**What just happened?** You defined a template — a reusable blueprint for dev environments — in your Coder deployment. It’s now stored in your organization’s template list, where you and any teammates in the same org can create workspaces from it. Let’s launch one.
 
-   ![Create template](../images/screenshots/create-template.png)_Create
-   template_
+## Step 5: Launch Your Workspace (2 minutes)
 
-1. Select **Save**.
+1. After template creation, click **"Create Workspace"**
 
-1. After the template is ready, select **Create Workspace**.
+2. **Name your workspace:**
+   - Name: `my-first-workspace`
 
-1. Give the workspace a name and select **Create Workspace**.
+3. Click **"Create Workspace"**
 
-1. Coder starts your new workspace:
+4. **Watch it spin up** (takes ~30 seconds)
+   - Status changes: `Pending` → `Starting` → `Running` ✅
 
-   ![getting-started-workspace is running](../images/screenshots/workspace-running-with-topbar.png)_Workspace
-   is running_
+## Step 6: Connect Your IDE (1 minute)
 
-1. Select **VS Code Desktop** to install the Coder extension and connect to your
-   Coder workspace.
+Once your workspace shows `Running`:
 
-## Work on some code
+<details>
+<summary><b>VS Code</b> (Recommended for first-time)</summary>
 
-After VS Code loads the remote environment, you can select **Open Folder** to
-explore directories in the Docker container or work on something new.
+1. Click **"VS Code Desktop"** button
+2. Install the Coder extension when prompted
+3. VS Code opens and connects automatically
 
-To clone an existing repository:
+</details>
 
-1. Select **Clone Repository** and enter the repository URL.
+<details>
+<summary><b>JetBrains IDEs</b></summary>
 
-   For example, to clone the Coder repo, enter
-   `https://github.com/coder/coder.git`.
+1. Install [JetBrains Gateway](https://jetbrains.com/)
+2. Click **"JetBrains Gateway"** in your workspace
+3. Follow the connection flow
 
-   Learn more about how to find the repository URL in the
-   [GitHub documentation](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository).
+</details>
 
-1. Choose the folder to which VS Code should clone the repo. It will be in its
-   own directory within this folder.
+<details>
+<summary><b>Web Terminal</b></summary>
 
-   Note that you cannot create a new parent directory in this step.
+1. Click **"Terminal"** in your workspace
+2. You're now in a browser-based shell
 
-1. After VS Code completes the clone, select **Open** to open the directory.
+</details>
 
-1. You are now using VS Code in your Coder environment!
+<details>
+<summary><b>SSH</b></summary>
 
-## What's next?
+```bash
+# Configure SSH
+coder config-ssh
 
-Now that you have your own workspace, use the same template to set one up for a
-teammate.
+# Connect
+ssh coder.my-first-workspace
+```
 
-Go to **Templates** and select **Create Workspace** and continue from Step 7 in
-[Configure Coder with a new workspace](#configure-coder-with-a-new-workspace).
+</details>
 
-After that, you can try to:
+![getting-started-workspace is running](../images/screenshots/workspace-running-with-topbar.png)
 
-- [Customize templates](../admin/templates/extending-templates/index.md)
-- [Enable Prometheus metrics](../admin/integrations/prometheus.md)
-- [Deploy to Google Cloud Platform (GCP)](../install/cloud/compute-engine.md)
+## ✅ Success! You're Coding in Coder
+
+You now have:
+- **Coder server** running locally
+- **A template** defining your environment
+- **A workspace** running that environment
+- **IDE access** to code remotely
+
+### Try This Now
+
+In your connected IDE:
+
+```bash
+# You're inside your workspace container!
+echo "Hello from $(hostname)"
+
+# Check your environment
+python3 --version
+node --version
+git --version
+
+# Create a project
+mkdir my-project && cd my-project
+echo "# Built with Coder" > README.md
+```
+
+## What's Next?
+
+Based on your role, here are your next steps:
+
+### For Developers
+- 📖 [Using workspaces](https://coder.com/docs/user-guides/workspace-management)
+- 🔧 [Personalizing with dotfiles](https://coder.com/docs/user-guides/workspace-dotfiles)
+- 💻 [Setting up AI Agents](https://coder.com/docs/ai-coder)
+
+### For Admins
+- 🎨 [Managing Templates](https://coder.com/docs/admin/templates/managing-templates)
+- 👥 [Setting up your Organization](https://coder.com/docs/admin/users/organizations)
+
+### For Teams
+- 📦 [Administration Overview](https://coder.com/docs/admin)
+- 📊 [Monitor usage](https://coder.com/docs/admin/monitoring)
+
+## Quick Reference
+
+### Common Commands
+
+```bash
+coder server              # Start Coder server
+coder login <url>         # Connect to remote Coder
+coder workspaces list     # List your workspaces
+coder ssh <workspace>     # SSH into workspace
+coder stop <workspace>    # Stop workspace (save resources)
+```
 
 ## Troubleshooting
 
-### Cannot connect to the Docker daemon
+<details>
+<summary><b>Docker connection error</b></summary>
 
-> Error: Error pinging Docker server: Cannot connect to the Docker daemon at
-> unix:///var/run/docker.sock. Is the docker daemon running?
-
-1. Install Docker for your system:
-
-   ```shell
-   curl -sSL https://get.docker.com | sh
-   ```
-
-1. Set up the Docker daemon in rootless mode for your user to run Docker as a
-   non-privileged user:
-
-   ```shell
-   dockerd-rootless-setuptool.sh install
-   ```
-
-   Depending on your system's dependencies, you might need to run other commands
-   before you retry this step. Read the output of this command for further
-   instructions.
-
-1. Assign your user to the Docker group:
-
-   ```shell
-   sudo usermod -aG docker $USER
-   ```
-
-1. Confirm that the user has been added:
-
-   ```console
-   $ groups
-   docker sudo users
-   ```
-
-   - Ubuntu users might not see the group membership update. In that case, run
-     the following command or reboot the machine:
-
-     ```shell
-     newgrp docker
-     ```
-
-### Can't start Coder server: Address already in use
-
-```shell
-Encountered an error running "coder server", see "coder server --help" for more information
-error: configure http(s): listen tcp 127.0.0.1:3000: bind: address already in use
+```bash
+# Error: Cannot connect to Docker daemon
+# Fix: Ensure Docker is running
+sudo systemctl start docker
+# or
+open -a Docker  # macOS
 ```
 
-1. Stop the process:
+</details>
 
-   ```shell
-   sudo systemctl stop coder
-   ```
+<details>
+<summary><b>Port 3000 already in use</b></summary>
 
-1. Start Coder:
+```bash
+# Use a different port
+coder server --http-address 0.0.0.0:8080
+```
 
-   ```shell
-   coder server
-   ```
+</details>
+
+<details>
+<summary><b>Can't access web UI</b></summary>
+
+Check firewall settings and ensure port 3000 is accessible. For remote servers, use the tunnel URL shown in terminal output.
+
+</details>
+
+---
+
+**Need help?** Join our [Discord](https://discord.gg/coder) or check [detailed installation docs](../install).
